@@ -1,9 +1,16 @@
+using Unity.Mathematics;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
     [SerializeField]
     private float _speed = 3.5f;
+
+    [SerializeField]
+    private GameObject _laserPrefab;
+    [SerializeField]
+    private float _fireRate = 0.5f;
+    private float _canFire = -1f;
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -19,6 +26,12 @@ public class Player : MonoBehaviour
     void Update()
     {
         CalculateMovement();
+        
+        if (Input.GetKeyDown(KeyCode.Space) && Time.time > _canFire) {
+            FireLaser();
+        }
+
+        
     }
 
 
@@ -37,5 +50,13 @@ public class Player : MonoBehaviour
         } else if (transform.position.x < -11.3f) {
             transform.position = new Vector3(11.3f, transform.position.y, 0);
         }
+    }
+
+    void FireLaser() {
+        
+        // Debug.Log("Space key pressed");
+        _canFire = Time.time + _fireRate;
+        Instantiate(_laserPrefab, transform.position + new Vector3(0,0.8f,0), Quaternion.identity);
+    
     }
 }
