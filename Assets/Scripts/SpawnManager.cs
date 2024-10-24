@@ -5,6 +5,10 @@ public class SpawnManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject _enemyPrefab;
+
+    [SerializeField]
+    private GameObject[] powerups;
+
     [SerializeField]
     private GameObject _enemyContainer;
     private bool _stopSpawning = false;
@@ -13,7 +17,8 @@ public class SpawnManager : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        StartCoroutine(SpawnRoutine());
+        StartCoroutine(SpawnEnemyRoutine());
+        StartCoroutine(SpawnPowerupRoutine());
     }
 
     // Update is called once per frame
@@ -23,7 +28,7 @@ public class SpawnManager : MonoBehaviour
     }
 
     //spawn game objects every 5 seconds
-    IEnumerator SpawnRoutine(){
+    IEnumerator SpawnEnemyRoutine(){
 
         while(_stopSpawning == false) {
             Vector3 posToSpawn = new Vector3(Random.Range(-8f, 8f), 7, 0);
@@ -37,6 +42,16 @@ public class SpawnManager : MonoBehaviour
         // yield return null; // wait 1 frame
 
         // yield return new WaitForSeconds(5.0f); // wait for 5 seconds
+    }
+
+
+    IEnumerator SpawnPowerupRoutine() {
+        while (_stopSpawning == false) {
+            Vector3 posToSpawn = new Vector3(Random.Range(-8f,8f), 7, 0);
+            int randomPowerUp = Random.Range(0, 3);
+            Instantiate(powerups[randomPowerUp], posToSpawn, Quaternion.identity);
+            yield return new WaitForSeconds(Random.Range(3, 8));
+        }
     }
 
     public void onPlayerDeath() {
